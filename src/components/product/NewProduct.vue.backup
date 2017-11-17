@@ -1,0 +1,102 @@
+<template>
+  <div>
+    <h4>New Product</h4>
+
+    <v-form v-model="valid" ref="form" lazy-validation>
+
+      <v-text-field
+        label="Title"
+        v-model="product.title"
+        :rules="titleRules"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        label="Description"
+        v-model="product.description"
+        :rules="descriptionRules"
+        multi-line
+        required
+      ></v-text-field>      
+
+      <v-text-field
+        label="Short description"
+        v-model="product.shortDescription"
+        :rules="shortDescriptionRules"
+        required
+      ></v-text-field>
+
+      <v-text-field
+        label="Price"
+        v-model="product.price"
+        prefix="$"
+        :rules="priceRules"
+        required
+      ></v-text-field>
+
+      <v-btn color="primary" @click="submit" :disabled="!valid">Save
+        <v-icon dark right>check_circle</v-icon>
+      </v-btn>
+
+      <v-btn color="red" dark @click="clear">Cancel
+        <v-icon dark right>block</v-icon>
+      </v-btn>
+
+    </v-form>
+
+  </div>
+</template>
+
+<script>
+  import { mapActions } from 'vuex'
+
+  export default {
+    data: () => ({
+
+      messageSaved: false,
+      valid: true,
+
+      product: {
+        title: '',
+        description: '',
+        shortDescription: '',
+        price: ''
+      },
+
+      titleRules: [
+        (v) => !!v || 'Title is required'
+      ],
+      descriptionRules: [
+        (v) => !!v || 'Description is required'
+      ],
+      shortDescriptionRules: [
+        (v) => !!v || 'Short description is required'
+      ],
+      priceRules: [
+        (v) => !!v || 'Price is required',
+        (v) => !isNaN(v) || 'Price must be a number',
+        (v) => parseFloat(v) < 10000000 || 'Price must lower than 10.000.000'
+      ]
+
+    }),
+    methods: {
+      ...mapActions({
+        insert: 'product/insert',
+        findAll: 'product/findAll',
+        showMessage: 'common/showMessage'
+      }),
+      submit () {
+        if (this.$refs.form.validate()) {
+          this.insert(this.product).then(() => {
+            this.showMessage({text: 'Product has been saved', icon: 'info_outline', color: 'green'})
+            this.findAll()
+            this.$router.push('/product')
+          })
+        }
+      },
+      clear () {
+        this.$router.go(-1)
+      }
+    }
+  }
+</script>
