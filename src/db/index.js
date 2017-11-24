@@ -12,3 +12,4 @@ const config = {
 
 export const app = firebase.initializeApp(config)
 export const products = firebase.firestore().collection('products')
+export const stats = firebase.firestore().collection('stats')

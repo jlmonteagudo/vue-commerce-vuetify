@@ -29,15 +29,15 @@
 
     methods: {
       ...mapActions({
-        insert: 'product/insert',
-        findAll: 'product/findAll',
+        update: 'product/update',
+        find: 'product/find',
         showMessage: 'common/showMessage',
         selectProduct: 'product/selectProduct'
       }),
       onSave (product) {
-        this.insert(product).then(() => {
+        this.update(product).then(() => {
           this.showMessage({text: 'Product has been saved', icon: 'info_outline', color: 'green'})
-          this.findAll()
+          this.find()
           this.$router.push('/product')
         })
       },
